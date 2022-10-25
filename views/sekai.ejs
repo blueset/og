@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+</head>
+<body>
+    <div id="og-image">
+        <div id="group">
+            <% if (authors) { %><small class="white-shadow"><%= authors %></small><% } %>
+            <h1 class="ellipsis white-shadow"><%= title %></h1>
+            <% if (desc) { %><p class="ellipsis white-shadow"><%= desc %></p><% } %>
+        </div>
+        <img src="/sekai.svg" style="height: 100px; width: 100%;"/>
+    </div>
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            font-weight: 100 900;
+            font-display: swap;
+            font-style: normal;
+            font-named-instance: 'Regular';
+            src: url("/i.woff2") format("woff2");
+        }
+        @font-face {
+            font-family: 'Inter';
+            font-weight: 100 900;
+            font-display: swap;
+            font-style: italic;
+            font-named-instance: 'Italic';
+            src: url("/ii.woff2") format("woff2");
+        }
+        @font-face {
+            font-family: 'Red Hat Display';
+            font-weight: 100 900;
+            font-display: swap;
+            font-style: normal;
+            font-named-instance: 'Regular';
+            src: url("/rhd.woff2") format("woff2");
+        }
+        @font-face {
+            font-family: 'Red Hat Display';
+            font-weight: 100 900;
+            font-display: swap;
+            font-style: italic;
+            font-named-instance: 'Italic';
+            src: url("/rhdi.woff2") format("woff2");
+        }
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-feature-settings: 'palt' 1;
+        }
+
+        #og-image {
+            background: url('/sekai-bg.jpg');
+            width: 1200px;
+            height: 630px;
+            color: rgb(23, 23, 23);
+            position: relative;
+            font-family: "Inter", "Source Han Sans", "Noto Sans CJK", sans-serif;
+        }
+
+        img {
+            position: absolute;
+            bottom: 50px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 60px;
+            font-weight: bold;
+            line-height: 1.1;
+            -webkit-line-clamp: 3;
+            background: -webkit-linear-gradient(#0069A5, #003D6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            padding-bottom: 5px;
+        }
+
+        .white-shadow {
+            filter: drop-shadow(0 0 3px white) drop-shadow(0 0 3px white) drop-shadow(0 0 3px white);
+        }
+        
+        p {
+            font-size: 20px;
+            line-height: 1.5;
+            -webkit-line-clamp: 2;
+        }
+
+        .ellipsis {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+        }
+
+        #group {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 5;
+            position: absolute;
+            top: 50px;
+            bottom: 125px;
+            left: 100px;
+            right: 100px;
+            text-align: center;
+            gap: 24px;
+        }
+
+        #filler {
+            flex-grow: 1;
+        }
+
+        small {
+            font-size: 24px;
+            font-weight: 600;
+            color: #0069A5;
+        }
+    </style>
+</body>
+</html>

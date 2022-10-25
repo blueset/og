@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+</head>
+<body>
+    <div id="og-image">
+        <div id="pattern"></div>
+        <div id="left">
+            <img src="/logo.svg" style="height: 75px; width: fit-content;"/>
+            <div id="filler"></div>
+            <% if (type) { %><small class="type-<%= type.toLocaleLowerCase().replaceAll(" ", "-") %>"><%= type %></small><% } %>
+            <h1 class="ellipsis"><%= title %></h1>
+            <% if (desc) { %><p class="ellipsis"><%= desc %></p><% } %>
+        </div>
+    </div>
+    <style>
+        @font-face {
+            font-family: 'Inter';
+            font-weight: 100 900;
+            font-display: swap;
+            font-style: normal;
+            font-named-instance: 'Regular';
+            src: url("/i.woff2") format("woff2");
+        }
+        @font-face {
+            font-family: 'Inter';
+            font-weight: 100 900;
+            font-display: swap;
+            font-style: italic;
+            font-named-instance: 'Italic';
+            src: url("/ii.woff2") format("woff2");
+        }
+        @font-face {
+            font-family: 'Red Hat Display';
+            font-weight: 100 900;
+            font-display: swap;
+            font-style: normal;
+            font-named-instance: 'Regular';
+            src: url("/rhd.woff2") format("woff2");
+        }
+        @font-face {
+            font-family: 'Red Hat Display';
+            font-weight: 100 900;
+            font-display: swap;
+            font-style: italic;
+            font-named-instance: 'Italic';
+            src: url("/rhdi.woff2") format("woff2");
+        }
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            font-feature-settings: 'palt' 1;
+        }
+
+        #og-image {
+            background-color: #083d77;
+            width: 1200px;
+            height: 630px;
+            color: #fff;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 60px;
+            font-weight: bold;
+            font-family: 'Red Hat Display', "Source Han Sans", "Noto Sans CJK", sans-serif;
+            line-height: 1.1;
+            -webkit-line-clamp: 3;
+            color: #fff;
+        }
+        
+        p {
+            font-size: 20px;
+            font-family: "Inter", "Source Han Sans", "Noto Sans CJK", sans-serif;
+            line-height: 1.5;
+            -webkit-line-clamp: 2;
+        }
+
+        .ellipsis {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+        }
+
+        #left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 5;
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            bottom: 50px;
+            width: calc((100% - 100px) * 0.675);
+            gap: 24px;
+        }
+
+        #filler {
+            flex-grow: 1;
+        }
+
+        #pattern {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 30%;
+            height: 100%;
+            z-index: 1;
+            background-image: url(/pattern.svg);
+            background-repeat: repeat;
+            background-size: 100px 100px;
+            background-position: center;
+        }
+
+        small {
+            font-size: 24px;
+            font-family: "Inter", "Source Han Sans", "Noto Sans CJK", sans-serif;
+            text-transform: lowercase;
+            font-weight: bold;
+            font-style: italic;
+            background-color: #00171f;
+            display: inline-block;
+            padding: 4px 8px;
+            width: fit-content;
+            border-radius: 8px;
+            margin-bottom: -8px;
+        }
+
+        small.type-open-source {
+            color: #44af69;
+        }
+        small.type-gallery {
+            color: #009ffd;
+        }
+        small.type-design {
+            color: #f3a712;
+        }
+        small.type-lyrics {
+            color: #fe4e00;
+        }
+        small.type-translation {
+            color: #628395;
+        }
+        small.type-miscellaneous {
+            color: #2e86ab;
+        }
+    </style>
+</body>
+</html>

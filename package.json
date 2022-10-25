@@ -5,8 +5,9 @@
     "deploy": "git push production master"
   },
   "dependencies": {
+    "ejs": "^3.1.6",
     "express": "^4.17.1",
     "markdown-express-middleware": "^0.0.5",
-    "puppeteer": "^1.18.1"
+    "puppeteer": "^13.3.2"
   }
 }

@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  bot:
+    build: .
+    restart: on-failure
+    ports:
+      - "6736:8080"
+    environment:
+      - PORT=8080
+    logging:
+      options:
+        max-size: 10m
+        max-file: "3"

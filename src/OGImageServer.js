@@ -1,64 +1,70 @@
 const puppeteer = require("puppeteer");
 const express = require("express");
 
+function encodeQueryData(data) {
+  const ret = [];
+  for (let d in data) if (data[d] !== undefined)
+    ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+  return ret.join('&');
+}
+
 class OGImageServer {
   constructor({ port }) {
     this.port = port;
     this.browser = null;
     this.app = express();
+    this.app.set('view engine', 'ejs');
     this.server = null;
     this.port = port;
   }
 
   async start() {
-    this.browser = await puppeteer.launch();
-
-    this.app.get("/og-image", (req, res, next) => {
-      const { text } = req.query;
-
-      res.status(200).send(`
-                <!DOCTYPE html>
-                <html lang="en">
-                    <head>
-                        <meta charset="UTF-8" />
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-                        <title>${text}</title>
-                        <style>
-                            * {
-                                padding: 0;
-                                margin: 0;
-                                box-sizing: border-box;
-                            }
-
-                            #og-image {
-                                width: 1200px;
-                                height: 630px;
-                                color: black;
-                                font-size: 72px;
-                                padding: 0 50px;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                text-align: center;
-                                font-weight: bold;
-                                font-family: 'Helvetica Neue', Helvetica, sans-serif, Arial;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div id="og-image">${text}</div>
-                    </body>
-                </html>
-            `);
+    this.browser = await puppeteer.launch({
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox'
+        ]
     });
 
-    this.app.get("/:text.png", async (req, res, next) => {
+    this.app.use('/', express.static(__dirname + '/../public'));
+    this.app.get("/og/1a23", (req, res, next) => {
+      const { title, desc, type } = req.query;
+      res.render("1a23", { title, desc, type });
+    });
+    this.app.get("/og/blog", (req, res, next) => {
+      const { title, desc } = req.query;
+      res.render("blog", { title, desc });
+    });
+    this.app.get("/og/sekai", (req, res, next) => {
+      const { title, desc, authors } = req.query;
+      res.render("sekai", { title, desc, authors });
+    });
+
+    this.app.get("/og-image/1a23.png", async (req, res, next) => {
       try {
-        const { text } = req.params;
-
-        const image = await this.getOGImageForText(text);
-
+        const { title, desc, type } = req.query;
+        const image = await this.getOGImageForText("1a23", { title, desc, type });
+        res.setHeader('content-type', 'image/png');
+        res.send(image);
+      } catch (err) {
+        next(err);
+      }
+    });
+    this.app.get("/og-image/blog.png", async (req, res, next) => {
+      try {
+        const { title, desc } = req.query;
+        const image = await this.getOGImageForText("blog", { title, desc });
+        res.setHeader('content-type', 'image/png');
+        res.send(image);
+      } catch (err) {
+        next(err);
+      }
+    });
+    this.app.get("/og-image/sekai.png", async (req, res, next) => {
+      try {
+        const { title, desc, authors } = req.query;
+        const image = await this.getOGImageForText("sekai", { title, desc, authors });
+        res.setHeader('content-type', 'image/png');
         res.send(image);
       } catch (err) {
         next(err);
@@ -78,12 +84,16 @@ class OGImageServer {
     console.log(`OG Image Server listening on port ${this.port}`);
   }
 
-  async getOGImageForText(text) {
-    const urlencodedText = encodeURIComponent(text);
+  async getOGImageForText(template, params) {
+    const version = await this.browser.version();
     const page = await this.browser.newPage();
-    await page.goto(
-      `http://localhost:${this.port}/og-image?text=${urlencodedText}`
-    );
+    const paramsStr = encodeQueryData(params);
+    await Promise.all([
+      page.goto(
+        `http://localhost:${this.port}/og/${template}?${paramsStr}`
+      ),
+      page._frameManager._mainFrame.waitForNavigation()
+    ]);
     const ogImageElement = await page.$("#og-image");
     const image = await ogImageElement.screenshot();
     await page.close();
